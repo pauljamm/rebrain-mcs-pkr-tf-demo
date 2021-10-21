@@ -1,0 +1,37 @@
+stages:
+  - build:bin
+  - build:image
+  - deploy
+
+build:bin:server:
+  image: golang:1.14 
+  stage: build:bin
+  script:
+    - cd server/
+    - CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o sample_server .
+  artifacts:
+    paths:
+      - server/sample_server
+
+build:bin:worker:
+  image: golang:1.14 
+  stage: build:bin
+  script:
+    - cd worker/
+    - CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o sample_worker .
+  artifacts:
+    paths:
+      - worker/sample_worker
+
+build:image:
+  image: hashicorp/packer
+  stage: build:image
+  script:
+    - cd devops/packer/
+    - packer build -var image_tag="$CI_COMMIT_REF_SLUG.$CI_PIPELINE_ID" app.pkr.hcl
+
+deploy:
+  image: hashicorp/terraform
+  stage: deploy
+  script:
+    - echo "OK"

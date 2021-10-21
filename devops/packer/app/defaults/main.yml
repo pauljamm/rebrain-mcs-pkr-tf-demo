@@ -1,0 +1,4 @@
+---
+app_binaries:
+  - sample_server
+  - sample_worker

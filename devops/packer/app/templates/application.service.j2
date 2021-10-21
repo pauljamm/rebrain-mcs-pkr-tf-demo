@@ -1,0 +1,19 @@
+[Unit]
+Description=Sample go application
+After=network.target
+
+[Service]
+Type=simple
+User=app
+Group=app
+Environment=AWS_ACCESS_KEY_ID=<ACCESS KEY ID из интерфейса облака>
+Environment=AWS_SECRET_ACCESS_KEY=<SECRET KEY из интерфейса облака>
+Environment=SQS_ENDPOINT_URL=sqs.mcs.mail.ru
+
+Restart=on-failure
+RestartSec=10
+
+ExecStart=/usr/local/bin/{{ item }}
+
+[Install]
+WantedBy=multi-user.target
